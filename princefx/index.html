@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrinceFX Academy - Master the Markets</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        charcoal: '#121212',
+                        charcoalLight: '#1a1a1a',
+                        charcoalMid: '#1e1e1e',
+                        gold: '#D4AF37',
+                        goldDark: '#B8962E',
+                        electric: '#007BFF',
+                        electricDark: '#0056b3',
+                        surface: '#252525',
+                        muted: '#8a8a8a'
+                    },
+                    fontFamily: {
+                        display: ['Space Grotesk', 'sans-serif'],
+                        body: ['DM Sans', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --bg: #121212;
+            --fg: #ffffff;
+            --muted: #8a8a8a;
+            --accent: #D4AF37;
+            --accent-blue: #007BFF;
+            --card: #1a1a1a;
+            --border: #2a2a2a;
+            --surface: #252525;
+        }
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: var(--bg);
+            color: var(--fg);
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
+
+        .grid-bg {
+            background-image: 
+                linear-gradient(rgba(212, 175, 55, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(212, 175, 55, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 60px 60px; }
+        }
+
+        .candle { animation: candlePulse 3s ease-in-out infinite; }
+        .candle:nth-child(odd) { animation-delay: -1.5s; }
+
+        @keyframes candlePulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                        transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+        .reveal-delay-4 { transition-delay: 0.4s; }
+
+        /* Primary Button Base */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent) 0%, #c9a227 100%);
+            color: #121212;
+            font-weight: 600;
+            padding: 1rem 2rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-align: center;
+            width: 100%; /* Full width on mobile */
+        }
+        
+        @media (min-width: 640px) {
+            .btn-primary {
+                width: auto; /* Auto width on desktop */
+            }
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s ease;
+        }
+        .btn-primary:hover::before { left: 100%; }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(212, 175, 55, 0.3);
+        }
+        .btn-primary:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 4px;
+        }
+
+        /* Secondary Button Base */
+        .btn-secondary {
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            font-weight: 500;
+            padding: 1rem 2rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            background: transparent;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-align: center;
+            width: 100%; /* Full width on mobile */
+        }
+
+        @media (min-width: 640px) {
+            .btn-secondary {
+                width: auto; /* Auto width on desktop */
+            }
+        }
+
+        .btn-secondary:hover {
+            background: rgba(212, 175, 55, 0.1);
+            transform: translateY(-2px);
+        }
+        .btn-secondary:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 4px;
+        }
+
+        /* Specific Button Styles for Contact Section */
+        .btn-whatsapp {
+            background: #25D366;
+            color: white;
+        }
+        .btn-whatsapp:hover {
+            box-shadow: 0 8px 30px rgba(37, 211, 102, 0.3);
+        }
+        
+        .btn-telegram {
+            background: #0088cc;
+            color: white;
+        }
+        .btn-telegram:hover {
+            box-shadow: 0 8px 30px rgba(0, 136, 204, 0.3);
+        }
+        
+        .btn-email {
+            background: var(--accent-blue);
+            color: white;
+        }
+        .btn-email:hover {
+            box-shadow: 0 8px 30px rgba(0, 123, 255, 0.3);
+        }
+
+        /* Card hover effect */
+        .pillar-card {
+            background: linear-gradient(145deg, rgba(26,26,26,0.8) 0%, rgba(18,18,18,0.9) 100%);
+            border: 1px solid var(--border);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .pillar-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .pillar-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(212, 175, 55, 0.3);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 40px rgba(212, 175, 55, 0.1);
+        }
+        .pillar-card:hover::before { opacity: 1; }
+
+        .chart-line {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: drawLine 3s ease forwards;
+        }
+        @keyframes drawLine { to { stroke-dashoffset: 0; } }
+
+        .testimonial-track {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .form-input {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--fg);
+            padding: 1rem 1.25rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+        .form-input::placeholder { color: var(--muted); }
+
+        .glow-gold { box-shadow: 0 0 60px rgba(212, 175, 55, 0.15); }
+
+        .nav-link {
+            position: relative;
+            color: var(--muted);
+            transition: color 0.3s ease;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px; left: 0;
+            width: 0; height: 1px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover { color: var(--fg); }
+        .nav-link:hover::after { width: 100%; }
+
+        .mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .mobile-menu.open { transform: translateX(0); }
+
+        .pnl-ticker { animation: tickerPulse 2s ease-in-out infinite; }
+        @keyframes tickerPulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+        .analysis-card { transition: all 0.4s ease; }
+        .analysis-card:hover { transform: scale(1.02); }
+        .analysis-card:hover .analysis-overlay { opacity: 1; }
+
+        .particle {
+            position: absolute;
+            width: 4px; height: 4px;
+            background: var(--accent);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 8s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            25% { transform: translateY(-20px) translateX(10px); }
+            50% { transform: translateY(-10px) translateX(-10px); }
+            75% { transform: translateY(-30px) translateX(5px); }
+        }
+    </style>
+</head>
+<body class="grid-bg">
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-charcoal/90 backdrop-blur-md border-b border-border">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="#" class="flex items-center gap-3 group" aria-label="PrinceFX Academy Home">
+                <div class="w-10 h-10 rounded bg-gradient-to-br from-gold to-goldDark flex items-center justify-center transition-transform group-hover:scale-110">
+                    <svg class="w-6 h-6 text-charcoal" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M3 13h2v8H3v-8zm4-6h2v14H7V7zm4-4h2v18h-2V3zm4 8h2v10h-2V11zm4-3h2v13h-2V8z"/>
+                    </svg>
+                </div>
+                <span class="font-display font-semibold text-xl text-white">PrinceFX<span class="text-gold">Academy</span></span>
+            </a>
+
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#pillars" class="nav-link font-medium">Strategy</a>
+                <a href="#results" class="nav-link font-medium">Results</a>
+                <a href="#contact" class="nav-link font-medium">Contact</a>
+                <a href="#contact" class="btn-primary text-sm">Get Started</a>
+            </div>
+
+            <button id="menuBtn" class="md:hidden p-2 text-white focus-visible:outline-2 focus-visible:outline-gold" aria-label="Toggle menu" aria-expanded="false">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+            </button>
+        </div>
+
+        <div id="mobileMenu" class="mobile-menu fixed inset-y-0 right-0 w-72 bg-charcoalLight border-l border-border md:hidden">
+            <div class="p-6 flex flex-col gap-6">
+                <button id="closeMenu" class="self-end p-2 text-muted hover:text-white" aria-label="Close menu">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+                <a href="#pillars" class="text-lg font-medium text-white hover:text-gold transition-colors">Strategy</a>
+                <a href="#results" class="text-lg font-medium text-white hover:text-gold transition-colors">Results</a>
+                <a href="#contact" class="text-lg font-medium text-white hover:text-gold transition-colors">Contact</a>
+                <a href="#contact" class="btn-primary text-center mt-4">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="min-h-screen flex items-center relative overflow-hidden pt-20">
+        <div class="absolute inset-0 pointer-events-none">
+            <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-gold/5 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-1/4 right-1/4 w-80 h-80 bg-electric/5 rounded-full blur-3xl"></div>
+            
+            <div class="particle" style="top: 20%; left: 10%; animation-delay: 0s;"></div>
+            <div class="particle" style="top: 60%; left: 85%; animation-delay: -2s;"></div>
+            <div class="particle" style="top: 80%; left: 20%; animation-delay: -4s;"></div>
+            <div class="particle" style="top: 30%; left: 70%; animation-delay: -6s;"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-6 py-20 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="text-center lg:text-left">
+                    <div class="reveal">
+                        <span class="inline-block px-4 py-2 rounded-full border border-gold/30 text-gold text-sm font-medium mb-6">
+                            Professional Forex Mentorship
+                        </span>
+                    </div>
+                    
+                    <h1 class="reveal reveal-delay-1 font-display font-bold text-4xl sm:text-5xl lg:text-6xl leading-tight mb-6">
+                        Master the Markets with
+                        <span class="block text-gold">PrinceFX Academy</span>
+                    </h1>
+                    
+                    <p class="reveal reveal-delay-2 text-lg sm:text-xl text-muted max-w-xl mx-auto lg:mx-0 mb-8">
+                        Transparent Price Action Trading. Disciplined Risk Management. Proven Results.
+                    </p>
+                    
+                    <!-- Responsive Buttons Container -->
+                    <div class="reveal reveal-delay-3 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                        <a href="https://t.me/+2348104019775" target="_blank" class="btn-primary">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
+                            </svg>
+                            Join our Free Telegram
+                        </a>
+                        <a href="#pillars" class="btn-secondary">
+                            Explore Mentorship
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                            </svg>
+                        </a>
+                    </div>
+
+                    <div class="reveal reveal-delay-4 mt-12 grid grid-cols-3 gap-6 max-w-md mx-auto lg:mx-0">
+                        <div class="text-center lg:text-left">
+                            <div class="font-display font-bold text-2xl sm:text-3xl text-gold">2,500+</div>
+                            <div class="text-sm text-muted">Students</div>
+                        </div>
+                        <div class="text-center lg:text-left">
+                            <div class="font-display font-bold text-2xl sm:text-3xl text-gold">89%</div>
+                            <div class="text-sm text-muted">Success Rate</div>
+                        </div>
+                        <div class="text-center lg:text-left">
+                            <div class="font-display font-bold text-2xl sm:text-3xl text-gold">5+ Yrs</div>
+                            <div class="text-sm text-muted">Experience</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal reveal-delay-2 relative hidden lg:block">
+                    <div class="relative bg-charcoalLight/50 rounded-lg border border-border p-6 glow-gold">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center gap-2">
+                                <span class="text-gold font-display font-semibold">EUR/USD</span>
+                                <span class="text-sm text-muted">H1</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-green-500 text-sm">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M7 14l5-5 5 5H7z"/>
+                                </svg>
+                                +2.4%
+                            </div>
+                        </div>
+                        
+                        <svg viewBox="0 0 400 200" class="w-full h-48">
+                            <defs>
+                                <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(212,175,55,0.1)" stroke-width="0.5"/>
+                                </pattern>
+                            </defs>
+                            <rect width="400" height="200" fill="url(#grid)"/>
+                            
+                            <g class="candle">
+                                <line x1="30" y1="80" x2="30" y2="120" stroke="#D4AF37" stroke-width="1"/>
+                                <rect x="25" y="90" width="10" height="20" fill="#D4AF37"/>
+                            </g>
+                            <g class="candle">
+                                <line x1="60" y1="70" x2="60" y2="110" stroke="#22c55e" stroke-width="1"/>
+                                <rect x="55" y="75" width="10" height="25" fill="#22c55e"/>
+                            </g>
+                            <g class="candle">
+                                <line x1="90" y1="60" x2="90" y2="100" stroke="#22c55e" stroke-width="1"/>
+                                <rect x="85" y="65" width="10" height="30" fill="#22c55e"/>
+                            </g>
+                            <g class="candle">
+                                <line x1="120" y1="50" x2="120" y2="90" stroke="#ef4444" stroke-width="1"/>
+                                <rect x="115" y="55" width="10" height="25" fill="#ef4444"/>
+                            </g>
+                            <g class="candle">
+                                <line x1="150" y1="55" x2="150" y2="95" stroke="#22c55e" stroke-width="1"/>
+                                <rect x="145" y="60" width="10" height="20" fill="#22c55e"/>
+                            </g>
+                            <g class="candle">
+                                <line x1="180" y1="45" x2="180" y2="85" stroke="#22c55e" stroke-width="1"/>
+                                <rect x="175" y="50" width="10" height="28" fill="#22c55e"/>
+                            </g>
+                            <g class="candle">
+                                <line x1="210" y1="40" x2="210" y2="75" stroke="#22c55e" stroke-width="1"/>
+                                <rect x="205" y="45" width="10" height="22" fill="#22c55e"/>
+                            </g>
+                            <g class="candle">
+                                <line x1="240" y1="35" x2="240" y2="70" stroke="#ef4444" stroke-width="1"/>
+                                <rect x="235" y="42" width="10" height="18" fill="#ef4444"/>
+                            </g>
+                            <g class="candle">
+                                <line x1="270" y1="38" x2="270" y2="72" stroke="#22c55e" stroke-width="1"/>
+                                <rect x="265" y="44" width="10" height="20" fill="#22c55e"/>
+                            </g>
+                            <g class="candle">
+                                <line x1="300" y1="32" x2="300" y2="65" stroke="#22c55e" stroke-width="1"/>
+                                <rect x="295" y="36" width="10" height="24" fill="#22c55e"/>
+                            </g>
+                            <g class="candle">
+                                <line x1="330" y1="28" x2="330" y2="58" stroke="#22c55e" stroke-width="1"/>
+                                <rect x="325" y="32" width="10" height="20" fill="#22c55e"/>
+                            </g>
+                            <g class="candle">
+                                <line x1="360" y1="22" x2="360" y2="52" stroke="#22c55e" stroke-width="1"/>
+                                <rect x="355" y="26" width="10" height="22" fill="#22c55e"/>
+                            </g>
+                            
+                            <path d="M 30 100 Q 150 70 250 50 T 370 30" fill="none" stroke="#007BFF" stroke-width="2" stroke-dasharray="5,5" class="chart-line"/>
+                            
+                            <circle cx="150" cy="70" r="6" fill="#D4AF37"/>
+                            <text x="150" y="90" fill="#D4AF37" font-size="10" text-anchor="middle">Entry</text>
+                            
+                            <circle cx="360" cy="30" r="6" fill="#22c55e"/>
+                            <text x="360" y="50" fill="#22c55e" font-size="10" text-anchor="middle">Target</text>
+                        </svg>
+
+                        <div class="mt-4 flex items-center justify-between text-sm">
+                            <div class="flex items-center gap-4">
+                                <span class="flex items-center gap-1">
+                                    <span class="w-3 h-3 rounded bg-green-500"></span>
+                                    Bullish
+                                </span>
+                                <span class="flex items-center gap-1">
+                                    <span class="w-3 h-3 rounded bg-red-500"></span>
+                                    Bearish
+                                </span>
+                            </div>
+                            <span class="text-muted">Live Analysis</span>
+                        </div>
+                    </div>
+
+                    <div class="absolute -top-4 -right-4 w-24 h-24 border border-gold/20 rounded-lg"></div>
+                    <div class="absolute -bottom-4 -left-4 w-16 h-16 border border-electric/20 rounded-lg"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-muted">
+            <span class="text-xs uppercase tracking-wider">Scroll</span>
+            <svg class="w-5 h-5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Academy Pillars Section -->
+    <section id="pillars" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="reveal inline-block text-gold font-medium text-sm uppercase tracking-wider mb-4">Our Methodology</span>
+                <h2 class="reveal reveal-delay-1 font-display font-bold text-3xl sm:text-4xl lg:text-5xl mb-4">The Academy Pillars</h2>
+                <p class="reveal reveal-delay-2 text-muted max-w-2xl mx-auto">A structured approach to professional trading built on three foundational principles.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6 lg:gap-8">
+                <article class="reveal reveal-delay-1 pillar-card rounded-lg p-8">
+                    <div class="w-14 h-14 rounded-lg bg-gold/10 flex items-center justify-center mb-6">
+                        <svg class="w-7 h-7 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-display font-semibold text-xl mb-3">Risk Management</h3>
+                    <p class="text-muted leading-relaxed">Capital preservation is our first priority. We teach you how to survive before you thrive.</p>
+                    <ul class="mt-6 space-y-3">
+                        <li class="flex items-center gap-2 text-sm text-muted">
+                            <svg class="w-4 h-4 text-gold flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+                            Position sizing strategies
+                        </li>
+                        <li class="flex items-center gap-2 text-sm text-muted">
+                            <svg class="w-4 h-4 text-gold flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+                            Drawdown management
+                        </li>
+                        <li class="flex items-center gap-2 text-sm text-muted">
+                            <svg class="w-4 h-4 text-gold flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+                            Risk-reward optimization
+                        </li>
+                    </ul>
+                </article>
+
+                <article class="reveal reveal-delay-2 pillar-card rounded-lg p-8">
+                    <div class="w-14 h-14 rounded-lg bg-electric/10 flex items-center justify-center mb-6">
+                        <svg class="w-7 h-7 text-electric" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-display font-semibold text-xl mb-3">Technical Mastery</h3>
+                    <p class="text-muted leading-relaxed">Decoding institutional candle patterns and liquidity to find high-probability setups.</p>
+                    <ul class="mt-6 space-y-3">
+                        <li class="flex items-center gap-2 text-sm text-muted">
+                            <svg class="w-4 h-4 text-electric flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+                            Price action analysis
+                        </li>
+                        <li class="flex items-center gap-2 text-sm text-muted">
+                            <svg class="w-4 h-4 text-electric flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+                            Smart money concepts
+                        </li>
+                        <li class="flex items-center gap-2 text-sm text-muted">
+                            <svg class="w-4 h-4 text-electric flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+                            Multi-timeframe analysis
+                        </li>
+                    </ul>
+                </article>
+
+                <article class="reveal reveal-delay-3 pillar-card rounded-lg p-8">
+                    <div class="w-14 h-14 rounded-lg bg-gold/10 flex items-center justify-center mb-6">
+                        <svg class="w-7 h-7 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-display font-semibold text-xl mb-3">Trader Psychology</h3>
+                    <p class="text-muted leading-relaxed">Removing emotion from the charts to execute like a professional.</p>
+                    <ul class="mt-6 space-y-3">
+                        <li class="flex items-center gap-2 text-sm text-muted">
+                            <svg class="w-4 h-4 text-gold flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+                            Emotional discipline
+                        </li>
+                        <li class="flex items-center gap-2 text-sm text-muted">
+                            <svg class="w-4 h-4 text-gold flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+                            Trading journal practices
+                        </li>
+                        <li class="flex items-center gap-2 text-sm text-muted">
+                            <svg class="w-4 h-4 text-gold flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+                            Consistent execution
+                        </li>
+                    </ul>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Analysis Section -->
+    <section class="py-24 bg-charcoalLight relative">
+        <div class="absolute inset-0 opacity-30">
+            <div class="absolute top-0 left-1/2 w-px h-full bg-gradient-to-b from-transparent via-gold/20 to-transparent"></div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="text-center mb-16">
+                <span class="reveal inline-block text-gold font-medium text-sm uppercase tracking-wider mb-4">Market Insights</span>
+                <h2 class="reveal reveal-delay-1 font-display font-bold text-3xl sm:text-4xl lg:text-5xl mb-4">Live Analysis</h2>
+                <p class="reveal reveal-delay-2 text-muted max-w-2xl mx-auto">Real-time market breakdowns and trade setups shared with our community.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <article class="reveal reveal-delay-1 analysis-card group relative rounded-lg overflow-hidden border border-border bg-charcoal cursor-pointer">
+                    <div class="aspect-video relative bg-gradient-to-br from-charcoalMid to-charcoal">
+                        <svg viewBox="0 0 400 225" class="w-full h-full p-6">
+                            <defs>
+                                <linearGradient id="chartGrad1" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" stop-color="#22c55e" stop-opacity="0.3"/>
+                                    <stop offset="100%" stop-color="#22c55e" stop-opacity="0"/>
+                                </linearGradient>
+                            </defs>
+                            <path d="M 20 180 Q 80 160 120 140 T 200 100 T 280 80 T 380 40" fill="none" stroke="#22c55e" stroke-width="2"/>
+                            <path d="M 20 180 Q 80 160 120 140 T 200 100 T 280 80 T 380 40 L 380 200 L 20 200 Z" fill="url(#chartGrad1)"/>
+                            <line x1="20" y1="90" x2="380" y2="90" stroke="#D4AF37" stroke-width="1" stroke-dasharray="4,4" opacity="0.5"/>
+                            <line x1="20" y1="150" x2="380" y2="150" stroke="#007BFF" stroke-width="1" stroke-dasharray="4,4" opacity="0.5"/>
+                            <text x="385" y="94" fill="#D4AF37" font-size="10">R1</text>
+                            <text x="385" y="154" fill="#007BFF" font-size="10">S1</text>
+                        </svg>
+                        
+                        <div class="analysis-overlay absolute inset-0 bg-charcoal/80 flex items-center justify-center opacity-0 transition-opacity">
+                            <span class="btn-primary">View Analysis</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="px-3 py-1 rounded-full bg-green-500/10 text-green-500 text-xs font-medium">Bullish</span>
+                            <span class="text-muted text-sm">Weekly Outlook</span>
+                        </div>
+                        <h3 class="font-display font-semibold text-lg mb-2">EUR/USD Weekly Outlook</h3>
+                        <p class="text-muted text-sm">Key levels and institutional targets for the week ahead.</p>
+                    </div>
+                </article>
+
+                <article class="reveal reveal-delay-2 analysis-card group relative rounded-lg overflow-hidden border border-border bg-charcoal cursor-pointer">
+                    <div class="aspect-video relative bg-gradient-to-br from-charcoalMid to-charcoal">
+                        <svg viewBox="0 0 400 225" class="w-full h-full p-6">
+                            <defs>
+                                <linearGradient id="chartGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" stop-color="#D4AF37" stop-opacity="0.3"/>
+                                    <stop offset="100%" stop-color="#D4AF37" stop-opacity="0"/>
+                                </linearGradient>
+                            </defs>
+                            <path d="M 20 60 Q 80 80 120 100 T 200 120 T 280 140 T 380 170" fill="none" stroke="#D4AF37" stroke-width="2"/>
+                            <path d="M 20 60 Q 80 80 120 100 T 200 120 T 280 140 T 380 170 L 380 200 L 20 200 Z" fill="url(#chartGrad2)"/>
+                            <line x1="20" y1="50" x2="380" y2="50" stroke="#D4AF37" stroke-width="1" opacity="0.3"/>
+                            <line x1="20" y1="100" x2="380" y2="100" stroke="#D4AF37" stroke-width="1" opacity="0.3"/>
+                            <line x1="20" y1="150" x2="380" y2="150" stroke="#D4AF37" stroke-width="1" opacity="0.3"/>
+                            <circle cx="280" cy="140" r="8" fill="none" stroke="#D4AF37" stroke-width="2"/>
+                            <circle cx="280" cy="140" r="3" fill="#D4AF37"/>
+                        </svg>
+                        
+                        <div class="analysis-overlay absolute inset-0 bg-charcoal/80 flex items-center justify-center opacity-0 transition-opacity">
+                            <span class="btn-primary">View Analysis</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="px-3 py-1 rounded-full bg-gold/10 text-gold text-xs font-medium">Scalping</span>
+                            <span class="text-muted text-sm">Intraday Setup</span>
+                        </div>
+                        <h3 class="font-display font-semibold text-lg mb-2">Gold Scalping Setups</h3>
+                        <p class="text-muted text-sm">High-precision entries on XAU/USD with tight stops.</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Performance & Trust Section -->
+    <section id="results" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="reveal inline-block text-gold font-medium text-sm uppercase tracking-wider mb-4">Verified Results</span>
+                <h2 class="reveal reveal-delay-1 font-display font-bold text-3xl sm:text-4xl lg:text-5xl mb-4">Performance & Trust</h2>
+                <p class="reveal reveal-delay-2 text-muted max-w-2xl mx-auto">Transparent track record and real student success stories.</p>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-8">
+                <div class="reveal reveal-delay-1 bg-charcoalLight rounded-lg border border-border p-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="font-display font-semibold text-xl">Verified PnL</h3>
+                        <span class="pnl-ticker flex items-center gap-2 text-green-500">
+                            <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                            Live
+                        </span>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-6 mb-6">
+                        <div class="bg-charcoal rounded-lg p-4">
+                            <div class="text-sm text-muted mb-1">Monthly Return</div>
+                            <div class="font-display font-bold text-2xl text-green-500">+18.7%</div>
+                        </div>
+                        <div class="bg-charcoal rounded-lg p-4">
+                            <div class="text-sm text-muted mb-1">Win Rate</div>
+                            <div class="font-display font-bold text-2xl text-gold">72.4%</div>
+                        </div>
+                        <div class="bg-charcoal rounded-lg p-4">
+                            <div class="text-sm text-muted mb-1">Risk/Reward</div>
+                            <div class="font-display font-bold text-2xl text-electric">1:2.4</div>
+                        </div>
+                        <div class="bg-charcoal rounded-lg p-4">
+                            <div class="text-sm text-muted mb-1">Max Drawdown</div>
+                            <div class="font-display font-bold text-2xl text-white">-8.2%</div>
+                        </div>
+                    </div>
+
+                    <svg viewBox="0 0 400 100" class="w-full h-24">
+                        <defs>
+                            <linearGradient id="pnlGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#22c55e" stop-opacity="0.2"/>
+                                <stop offset="100%" stop-color="#22c55e" stop-opacity="0"/>
+                            </linearGradient>
+                        </defs>
+                        <path d="M 0 80 Q 40 70 80 65 T 160 50 T 240 40 T 320 25 T 400 15" fill="none" stroke="#22c55e" stroke-width="2"/>
+                        <path d="M 0 80 Q 40 70 80 65 T 160 50 T 240 40 T 320 25 T 400 15 L 400 100 L 0 100 Z" fill="url(#pnlGrad)"/>
+                    </svg>
+                    <p class="text-xs text-muted mt-2 text-center">Equity curve - Last 30 trading days</p>
+                </div>
+
+                <div class="reveal reveal-delay-2 bg-charcoalLight rounded-lg border border-border p-8">
+                    <h3 class="font-display font-semibold text-xl mb-6">Student Results</h3>
+                    
+                    <div class="relative overflow-hidden">
+                        <div id="testimonialTrack" class="testimonial-track">
+                            <div class="min-w-full">
+                                <blockquote class="mb-6">
+                                    <p class="text-muted leading-relaxed italic">"After 2 years of struggling, PrinceFX gave me the structure I needed. The risk management module alone was worth 10x the investment. First profitable quarter ever."</p>
+                                </blockquote>
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-gold to-goldDark flex items-center justify-center font-display font-bold text-charcoal">MK</div>
+                                    <div>
+                                        <div class="font-medium">Marcus K.</div>
+                                        <div class="text-sm text-muted">Trader for 3 years</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="min-w-full">
+                                <blockquote class="mb-6">
+                                    <p class="text-muted leading-relaxed italic">"The price action methodology is crystal clear. No more indicator clutter. I now understand why price moves the way it does. Consistent profits for 6 months straight."</p>
+                                </blockquote>
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-electric to-electricDark flex items-center justify-center font-display font-bold text-white">SL</div>
+                                    <div>
+                                        <div class="font-medium">Sarah L.</div>
+                                        <div class="text-sm text-muted">Trader for 1.5 years</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="min-w-full">
+                                <blockquote class="mb-6">
+                                    <p class="text-muted leading-relaxed italic">"The psychology section changed everything. I stopped overtrading and started executing my plan. My account is up 45% this year with controlled risk."</p>
+                                </blockquote>
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-gold to-goldDark flex items-center justify-center font-display font-bold text-charcoal">JT</div>
+                                    <div>
+                                        <div class="font-medium">James T.</div>
+                                        <div class="text-sm text-muted">Trader for 2 years</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-center gap-2 mt-6">
+                            <button class="testimonial-dot w-2 h-2 rounded-full bg-gold" data-index="0" aria-label="Testimonial 1"></button>
+                            <button class="testimonial-dot w-2 h-2 rounded-full bg-muted/30" data-index="1" aria-label="Testimonial 2"></button>
+                            <button class="testimonial-dot w-2 h-2 rounded-full bg-muted/30" data-index="2" aria-label="Testimonial 3"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-24 bg-charcoalLight relative">
+        <div class="absolute inset-0 pointer-events-none">
+            <div class="absolute bottom-0 left-0 w-96 h-96 bg-gold/5 rounded-full blur-3xl"></div>
+        </div>
+        
+        <div class="max-w-3xl mx-auto px-6 relative z-10">
+            <div class="text-center mb-12">
+                <span class="reveal inline-block text-gold font-medium text-sm uppercase tracking-wider mb-4">Get Started</span>
+                <h2 class="reveal reveal-delay-1 font-display font-bold text-3xl sm:text-4xl lg:text-5xl mb-4">Join the Academy</h2>
+                <p class="reveal reveal-delay-2 text-muted">Take the first step towards consistent profitability.</p>
+            </div>
+
+            <form id="contactForm" class="reveal reveal-delay-3 bg-charcoal rounded-lg border border-border p-8">
+                <div class="space-y-6">
+                    <div>
+                        <label for="name" class="block text-sm font-medium mb-2">Name</label>
+                        <input type="text" id="name" name="name" required class="form-input" placeholder="Your full name">
+                    </div>
+                    
+                    <div>
+                        <label for="email" class="block text-sm font-medium mb-2">Email</label>
+                        <input type="email" id="email" name="email" required class="form-input" placeholder="you@example.com">
+                    </div>
+                    
+                    <div>
+                        <label for="experience" class="block text-sm font-medium mb-2">Trading Experience</label>
+                        <select id="experience" name="experience" required class="form-input cursor-pointer">
+                            <option value="" disabled selected>Select your experience level</option>
+                            <option value="beginner">Beginner (0-6 months)</option>
+                            <option value="intermediate">Intermediate (6 months - 2 years)</option>
+                            <option value="advanced">Advanced (2+ years)</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label for="message" class="block text-sm font-medium mb-2">Your Message</label>
+                        <textarea id="message" name="message" rows="4" class="form-input resize-none" placeholder="Tell us about your trading goals..."></textarea>
+                    </div>
+                    
+                    <div class="pt-4">
+                        <p class="text-sm text-muted mb-4 text-center">Send your application via:</p>
+                        
+                        <!-- Responsive Button Grid -->
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <!-- WhatsApp Button -->
+                            <button type="button" id="whatsappBtn" class="btn-primary btn-whatsapp">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                                </svg>
+                                WhatsApp
+                            </button>
+
+                            <!-- Telegram Button -->
+                            <a href="https://t.me/+2348104019775" target="_blank" class="btn-primary btn-telegram">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+                                </svg>
+                                Telegram
+                            </a>
+
+                            <!-- Email Button -->
+                            <button type="button" id="emailBtn" class="btn-primary btn-email">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                </svg>
+                                Email
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 border-t border-border">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-3 gap-8 items-center">
+                <div class="flex items-center gap-3 justify-center md:justify-start">
+                    <div class="w-10 h-10 rounded bg-gradient-to-br from-gold to-goldDark flex items-center justify-center">
+                        <svg class="w-6 h-6 text-charcoal" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M3 13h2v8H3v-8zm4-6h2v14H7V7zm4-4h2v18h-2V3zm4 8h2v10h-2V11zm4-3h2v13h-2V8z"/>
+                        </svg>
+                    </div>
+                    <span class="font-display font-semibold text-lg">PrinceFX<span class="text-gold">Academy</span></span>
+                </div>
+
+                <div class="flex items-center justify-center gap-4">
+                    <a href="https://instagram.com" target="_blank" class="w-10 h-10 rounded-lg bg-surface flex items-center justify-center text-muted hover:text-gold hover:bg-gold/10 transition-all" aria-label="Instagram">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                        </svg>
+                    </a>
+                    <a href="https://t.me/+2348104019775" target="_blank" class="w-10 h-10 rounded-lg bg-surface flex items-center justify-center text-muted hover:text-gold hover:bg-gold/10 transition-all" aria-label="Telegram">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
+                        </svg>
+                    </a>
+                    <a href="https://youtube.com" target="_blank" class="w-10 h-10 rounded-lg bg-surface flex items-center justify-center text-muted hover:text-gold hover:bg-gold/10 transition-all" aria-label="YouTube">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                        </svg>
+                    </a>
+                </div>
+
+                <div class="text-center md:text-right">
+                    <p class="text-sm text-muted">PrinceFX Academy 2026</p>
+                </div>
+            </div>
+
+            <div class="mt-8 pt-8 border-t border-border">
+                <p class="text-xs text-muted text-center leading-relaxed max-w-3xl mx-auto">
+                    <strong class="text-white">Risk Warning:</strong> Trading foreign exchange carries a high level of risk and may not be suitable for all investors. Past performance is not indicative of future results. The high degree of leverage can work against you as well as for you. Before deciding to trade foreign exchange, you should carefully consider your investment objectives, level of experience, and risk appetite.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize variables
+        let currentTestimonial = 0;
+        const totalTestimonials = 3;
+        let testimonialInterval = null;
+        let testimonialTrack = null;
+        let testimonialDots = null;
+        
+        // Mobile menu functionality
+        const menuBtn = document.getElementById('menuBtn');
+        const closeMenu = document.getElementById('closeMenu');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.add('open');
+            menuBtn.setAttribute('aria-expanded', 'true');
+        });
+
+        closeMenu.addEventListener('click', () => {
+            mobileMenu.classList.remove('open');
+            menuBtn.setAttribute('aria-expanded', 'false');
+        });
+
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('open');
+                menuBtn.setAttribute('aria-expanded', 'false');
+            });
+        });
+
+        // Scroll reveal
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Testimonial slider
+        function initTestimonialSlider() {
+            testimonialTrack = document.getElementById('testimonialTrack');
+            testimonialDots = document.querySelectorAll('.testimonial-dot');
+            
+            if (!testimonialTrack || !testimonialDots.length) return;
+            
+            function updateTestimonial(index) {
+                currentTestimonial = index;
+                testimonialTrack.style.transform = `translateX(-${index * 100}%)`;
+                
+                testimonialDots.forEach((dot, i) => {
+                    dot.classList.toggle('bg-gold', i === index);
+                    dot.classList.toggle('bg-muted/30', i !== index);
+                });
+            }
+
+            testimonialDots.forEach(dot => {
+                dot.addEventListener('click', () => {
+                    const index = parseInt(dot.dataset.index);
+                    updateTestimonial(index);
+                    resetAutoSlide();
+                });
+            });
+
+            function autoSlide() {
+                const nextIndex = (currentTestimonial + 1) % totalTestimonials;
+                updateTestimonial(nextIndex);
+            }
+
+            function resetAutoSlide() {
+                clearInterval(testimonialInterval);
+                testimonialInterval = setInterval(autoSlide, 5000);
+            }
+
+            testimonialInterval = setInterval(autoSlide, 5000);
+        }
+        
+        initTestimonialSlider();
+
+        // --- NEW CONTACT LOGIC ---
+        const contactForm = document.getElementById('contactForm');
+        const whatsappBtn = document.getElementById('whatsappBtn');
+        const emailBtn = document.getElementById('emailBtn');
+
+        // Helper to get form data
+        function getFormData() {
+            return {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                experience: document.getElementById('experience').value,
+                message: document.getElementById('message').value
+            };
+        }
+
+        // Helper to validate form
+        function validateForm() {
+            const data = getFormData();
+            if (!data.name || !data.email || !data.experience) {
+                alert('Please fill in Name, Email, and Experience level before sending.');
+                return false;
+            }
+            return true;
+        }
+
+        // WhatsApp Send
+        whatsappBtn.addEventListener('click', () => {
+            if (!validateForm()) return;
+            const data = getFormData();
+            const text = `*New Inquiry from PrinceFX Website*%0A%0A*Name:* ${data.name}%0A*Email:* ${data.email}%0A*Experience:* ${data.experience}%0A*Message:* ${data.message || 'N/A'}`;
+            const url = `https://wa.me/2348104019775?text=${text}`;
+            window.open(url, '_blank');
+        });
+
+        // Email Send
+        emailBtn.addEventListener('click', () => {
+            if (!validateForm()) return;
+            const data = getFormData();
+            const subject = encodeURIComponent("PrinceFX Academy Application");
+            const body = encodeURIComponent(`Name: ${data.name}\nEmail: ${data.email}\nExperience: ${data.experience}\nMessage: ${data.message || 'N/A'}`);
+            window.location.href = `mailto:hazzaaman3@gmail.com?subject=${subject}&body=${body}`;
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Keyboard nav
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && mobileMenu.classList.contains('open')) {
+                mobileMenu.classList.remove('open');
+                menuBtn.setAttribute('aria-expanded', 'false');
+                menuBtn.focus();
+            }
+        });
+    </script>
+</body>
+</html>
